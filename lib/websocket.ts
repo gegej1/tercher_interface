@@ -8,7 +8,27 @@ export interface StudentAttentionUpdate {
 
 export interface WebSocketMessage {
   type: string
+  clientId?: string
+  message?: string
+  studentId?: string
+  score?: number
+  level?: 'high' | 'medium' | 'low'
+  timestamp?: number
+  dataPointsCount?: number
+  students?: any[]
   [key: string]: any
+}
+
+// 类型验证函数
+function isValidStudentAttentionUpdate(message: WebSocketMessage): boolean {
+  return !!(
+    message.studentId &&
+    typeof message.score === 'number' &&
+    message.level &&
+    ['high', 'medium', 'low'].includes(message.level) &&
+    typeof message.timestamp === 'number' &&
+    typeof message.dataPointsCount === 'number'
+  )
 }
 
 export class TeacherWebSocketClient {
@@ -107,7 +127,19 @@ export class TeacherWebSocketClient {
 
       case 'student_attention_update':
         console.log('📊 教师端收到学生专心度更新:', message)
-        this.onStudentUpdateCallback?.(message as StudentAttentionUpdate)
+        // 验证消息格式并安全转换
+        if (isValidStudentAttentionUpdate(message)) {
+          const update: StudentAttentionUpdate = {
+            studentId: message.studentId!,
+            score: message.score!,
+            level: message.level!,
+            timestamp: message.timestamp!,
+            dataPointsCount: message.dataPointsCount!
+          }
+          this.onStudentUpdateCallback?.(update)
+        } else {
+          console.error('❌ 无效的学生专心度更新消息格式:', message)
+        }
         break
 
       case 'student_list':
@@ -157,7 +189,7 @@ export class TeacherWebSocketClient {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++
       console.log(`🏫 尝试重连 (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`)
-      
+
       setTimeout(() => {
         this.connect().catch(error => {
           console.error('🏫 重连失败:', error)
