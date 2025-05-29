@@ -17,7 +17,6 @@ export default function StudentCard({
       onClick={() => onClick(name, distraction)}
     >
       <svg
-        t="1747447826714"
         className="icon"
         viewBox="0 0 1024 1024"
         version="1.1"
