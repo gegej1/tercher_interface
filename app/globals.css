@@ -250,3 +250,60 @@ footer {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
+
+/* StudentModal 分数显示样式 */
+.modal-content .data-item {
+  margin: 15px 0 !important;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.modal-content .score {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #007bff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.modal-content .status.high {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.modal-content .status.medium {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.modal-content .status.low {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.modal-content .level.high {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.modal-content .level.medium {
+  color: #ffc107;
+  font-weight: 500;
+}
+
+.modal-content .level.low {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* 等待学生连接的提示 */
+.no-students {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #666;
+  font-size: 18px;
+  font-style: italic;
+}

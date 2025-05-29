@@ -1,45 +1,52 @@
 import StudentCard from './StudentCard'
 
-interface StudentCardsProps {
-  onStudentClick: (name: string, distraction: number) => void;
+interface StudentData {
+  id: string
+  name: string
+  score: number
+  level: 'high' | 'medium' | 'low'
+  lastUpdate: number
 }
 
-export default function StudentCards({ onStudentClick }: StudentCardsProps) {
-  // 模拟学生数据
-  const students = [
-    { name: '学生1', distraction: 3, attentionLevel: 'green' as const },
-    { name: '学生2', distraction: 5, attentionLevel: 'yellow' as const },
-    { name: '学生3', distraction: 8, attentionLevel: 'red' as const },
-    { name: '学生4', distraction: 2, attentionLevel: 'green' as const },
-    { name: '学生5', distraction: 4, attentionLevel: 'yellow' as const },
-    { name: '学生6', distraction: 7, attentionLevel: 'red' as const },
-    { name: '学生7', distraction: 1, attentionLevel: 'green' as const },
-    { name: '学生8', distraction: 6, attentionLevel: 'yellow' as const },
-    { name: '学生9', distraction: 9, attentionLevel: 'red' as const },
-    { name: '学生10', distraction: 0, attentionLevel: 'green' as const },
-    { name: '学生11', distraction: 3, attentionLevel: 'yellow' as const },
-    { name: '学生12', distraction: 10, attentionLevel: 'red' as const },
-    { name: '学生13', distraction: 2, attentionLevel: 'green' as const },
-    { name: '学生14', distraction: 4, attentionLevel: 'yellow' as const },
-    { name: '学生15', distraction: 7, attentionLevel: 'red' as const },
-    { name: '学生16', distraction: 1, attentionLevel: 'green' as const },
-    { name: '学生17', distraction: 5, attentionLevel: 'yellow' as const },
-    { name: '学生18', distraction: 8, attentionLevel: 'red' as const },
-    { name: '学生19', distraction: 0, attentionLevel: 'green' as const },
-    { name: '学生20', distraction: 3, attentionLevel: 'yellow' as const },
-  ]
+interface StudentCardsProps {
+  students: Map<string, StudentData>
+  onStudentClick: (name: string, score: number) => void;
+}
+
+export default function StudentCards({ students, onStudentClick }: StudentCardsProps) {
+  // 将Map转换为数组
+  const studentArray = Array.from(students.values())
+
+  // 将level转换为attentionLevel
+  const getAttentionLevel = (level: 'high' | 'medium' | 'low'): 'green' | 'yellow' | 'red' => {
+    switch (level) {
+      case 'high': return 'green'
+      case 'medium': return 'yellow'
+      case 'low': return 'red'
+      default: return 'yellow'
+    }
+  }
 
   return (
     <div className="student-cards">
-      {students.map((student, index) => (
-        <StudentCard
-          key={index}
-          name={student.name}
-          distraction={student.distraction}
-          attentionLevel={student.attentionLevel}
-          onClick={onStudentClick}
-        />
-      ))}
+      {studentArray.length > 0 ? (
+        studentArray.map((student) => (
+          <StudentCard
+            key={student.id}
+            name={student.name}
+            score={student.score}
+            attentionLevel={getAttentionLevel(student.level)}
+            onClick={onStudentClick}
+          />
+        ))
+      ) : (
+        <div className="no-students">
+          <p>等待学生连接...</p>
+          <p className="text-sm text-gray-500 mt-2">
+            请确保学生端已启动摄像头并连接到WebSocket服务
+          </p>
+        </div>
+      )}
     </div>
   )
 }

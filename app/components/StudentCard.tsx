@@ -1,20 +1,20 @@
 interface StudentCardProps {
   name: string;
-  distraction: number;
+  score: number;
   attentionLevel: 'green' | 'yellow' | 'red';
-  onClick: (name: string, distraction: number) => void;
+  onClick: (name: string, score: number) => void;
 }
 
 export default function StudentCard({
   name,
-  distraction,
+  score,
   attentionLevel,
   onClick
 }: StudentCardProps) {
   return (
     <div
       className="student-card"
-      onClick={() => onClick(name, distraction)}
+      onClick={() => onClick(name, score)}
     >
       <svg
         className="icon"
