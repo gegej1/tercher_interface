@@ -8,7 +8,7 @@ export interface StudentAttentionUpdate {
 
 export interface WebSocketMessage {
   type: string
-  clientId?: string
+  clientId?: string | null
   message?: string
   studentId?: string
   score?: number
@@ -117,7 +117,7 @@ export class TeacherWebSocketClient {
   private handleMessage(message: WebSocketMessage) {
     switch (message.type) {
       case 'connection':
-        this.clientId = message.clientId
+        this.clientId = message.clientId || null
         console.log('🏫 教师端获得客户端ID:', this.clientId)
         break
 

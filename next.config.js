@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
+  // Next.js 14 中 appDir 已经是默认的，不需要在 experimental 中设置
   env: {
-    MONGODB_URI: process.env.MONGODB_URI,
+    MONGODB_URI: process.env.MONGODB_URI || '',
   },
   // Vercel部署优化
-  output: 'standalone',
   trailingSlash: true,
   // 静态资源优化
   images: {

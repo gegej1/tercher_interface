@@ -56,7 +56,7 @@ export default function TeacherDashboard() {
 
     // 连接WebSocket
     setConnectionStatus('connecting')
-    client.connect().catch(error => {
+    client.connect().catch((error: unknown) => {
       console.error('🏫 WebSocket连接失败:', error)
       setConnectionStatus('disconnected')
     })
