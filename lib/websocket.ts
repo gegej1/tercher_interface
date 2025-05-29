@@ -8,27 +8,7 @@ export interface StudentAttentionUpdate {
 
 export interface WebSocketMessage {
   type: string
-  clientId?: string | null
-  message?: string
-  studentId?: string
-  score?: number
-  level?: 'high' | 'medium' | 'low'
-  timestamp?: number
-  dataPointsCount?: number
-  students?: any[]
   [key: string]: any
-}
-
-// 类型验证函数
-function isValidStudentAttentionUpdate(message: WebSocketMessage): boolean {
-  return !!(
-    message.studentId &&
-    typeof message.score === 'number' &&
-    message.level &&
-    ['high', 'medium', 'low'].includes(message.level) &&
-    typeof message.timestamp === 'number' &&
-    typeof message.dataPointsCount === 'number'
-  )
 }
 
 export class TeacherWebSocketClient {
@@ -117,7 +97,7 @@ export class TeacherWebSocketClient {
   private handleMessage(message: WebSocketMessage) {
     switch (message.type) {
       case 'connection':
-        this.clientId = message.clientId || null
+        this.clientId = message.clientId
         console.log('🏫 教师端获得客户端ID:', this.clientId)
         break
 
@@ -127,19 +107,15 @@ export class TeacherWebSocketClient {
 
       case 'student_attention_update':
         console.log('📊 教师端收到学生专心度更新:', message)
-        // 验证消息格式并安全转换
-        if (isValidStudentAttentionUpdate(message)) {
-          const update: StudentAttentionUpdate = {
-            studentId: message.studentId!,
-            score: message.score!,
-            level: message.level!,
-            timestamp: message.timestamp!,
-            dataPointsCount: message.dataPointsCount!
-          }
-          this.onStudentUpdateCallback?.(update)
-        } else {
-          console.error('❌ 无效的学生专心度更新消息格式:', message)
+        // 直接构造更新对象，参考学生端的简单方式
+        const update: StudentAttentionUpdate = {
+          studentId: message.studentId,
+          score: message.score,
+          level: message.level,
+          timestamp: message.timestamp,
+          dataPointsCount: message.dataPointsCount
         }
+        this.onStudentUpdateCallback?.(update)
         break
 
       case 'student_list':
